@@ -25,7 +25,19 @@ def showFigures(**imgs):
         subplot(1,len(imgs) ,counter);imshow(v);title(k)
 
     show()
+    
+def extractChannels(I):
+    R,G,B = I[:,:,0], I[:,:,1], I[:,:,2]
+    return (R, G, B)
+
+    
 #----------------------------------Main body
 I=cv2.imread("Flag.jpg")
 I=cv2.cvtColor(I, cv2.COLOR_RGB2BGR)
-showFigures(flag=I)
+
+ps = GetCoordinates(I)
+flag = I[ int(ps[0][1]):int(ps[1][1]),int(ps[0][0]):int(ps[1][0]),:]
+#chnl = extractChannels(I)
+#GetCoordinates(I)
+#showFigures(flag=I, Red=chnl[0], Green=chnl[1], Blue=chnl[2])
+showFigures(Oryginal=I,Flag=flag)
