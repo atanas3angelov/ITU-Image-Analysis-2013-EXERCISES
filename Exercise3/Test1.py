@@ -63,7 +63,37 @@ def displayFunc(vector):
     axis([-2, 256, -2, 256])
     plt.show()
         
-#def grayLevelMap2(I,vector):
+def grayLevelMap2(I,vector):
+    newImage=[]
+    for t in I:
+        newBlock=[]
+        for i in t:
+            j=i
+            if i>max(vector): 
+                j=max(vector)
+            elif i<min(vector):
+                j=min(vector) #How to go with lambda
+            newBlock.append(vector[j])
+        newImage.append(newBlock)
+    return newImage
+
+
+def grayLevelMap(I,b,a):
+    newImage=[]
+    for t in I:
+        newBlock=[]
+        for i in t:
+            if a==0: a=1
+            i=i*a+b
+            if i>255: i = 255
+            if i<0: i = 0 
+            newBlock.append(i)
+        newImage.append(newBlock)
+    return newImage
+
+        
+    
+    
     
         
 
@@ -71,8 +101,8 @@ def displayFunc(vector):
 ##------------------------------Main body
 
 # Loading an image using openCV
-I1=cv2.imread("children.tif")
-I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
+I1=cv2.imread("GreenTest.jpg")
+#I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
 
 #show2_OpenCV(I1, I2)
 #show1_OpenCV(image = I1)
@@ -81,11 +111,16 @@ I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
 #showAll_OpenCV(image1 = I1, image2 = I2, image3= I2)
 #showAll_PyLab(image = I1, image2 = I2, image3 = I2)
 #cv2.imwrite("image.tif", I1)
-#JASNA DUPA
 
+#vector = [255-x for x in range(0,256)]
 
+#I3 = grayLevelMap2(I2, vector)
+#I3 = grayLevelMap(I2,90,0)
 
+#show1_OpenCV(I1)
+R,G,B = I1[:,:,0], I1[:,:,1], I1[:,:,2]
 
+#displayFunc(vector)
 
 
 

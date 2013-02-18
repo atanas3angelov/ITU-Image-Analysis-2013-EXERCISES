@@ -39,21 +39,21 @@ def displayHistogram(n,bins):
 
 #-------------------------------Main body
 #loading an image
-I=cv2.imread("colorProblem.jpg") 
-#Creating the image histogram
-n,bins = histogram(array(I),256,normed=True)
-#displaing the histogram
-displayHistogram(n,bins)
+I=cv2.imread("GreenTest.jpg") 
+R,G,B = I[:,:,0], I[:,:,1], I[:,:,2]
+for i in [R,G,B]:
+    n,bins = histogram(array(i),256,normed=True)
+    displayHistogram(n,bins)
 
 
 
 #------Example of histogram equalization
 
 #loading an image
-I=cv2.imread("colorProblem.jpg") 
-I=cv2.cvtColor(I, cv2.COLOR_RGB2GRAY)
-I_eq = cv2.equalizeHist(I)
-Test1.show2_OpenCV(I,I_eq)
+#I=cv2.imread("colorProblem.jpg") 
+#I=cv2.cvtColor(I, cv2.COLOR_RGB2GRAY)
+#I_eq = cv2.equalizeHist(I)
+#Test1.show2_OpenCV(I,I_eq)
 
 
 
