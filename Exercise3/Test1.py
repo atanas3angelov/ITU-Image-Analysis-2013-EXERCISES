@@ -81,6 +81,7 @@ I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
 #showAll_OpenCV(image1 = I1, image2 = I2, image3= I2)
 #showAll_PyLab(image = I1, image2 = I2, image3 = I2)
 #cv2.imwrite("image.tif", I1)
+#JASNA DUPA
 
 
 
