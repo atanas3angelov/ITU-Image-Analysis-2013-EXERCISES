@@ -64,18 +64,9 @@ def displayFunc(vector):
     plt.show()
         
 def grayLevelMap2(I,vector):
-    newImage=[]
-    for t in I:
-        newBlock=[]
-        for i in t:
-            j=i
-            if i>max(vector): 
-                j=max(vector)
-            elif i<min(vector):
-                j=min(vector) #How to go with lambda
-            newBlock.append(vector[j])
-        newImage.append(newBlock)
-    return newImage
+    for i in range(len(I)):
+        I[i] = map(lambda x: max(min(vector[x], 255),0), I[i])
+    return I
 
 
 def grayLevelMap(I,b,a):
@@ -91,6 +82,12 @@ def grayLevelMap(I,b,a):
         newImage.append(newBlock)
     return newImage
 
+def greyLevelMapLambdaWay(II,b,a):
+    I=copy(II)
+    for i in range(len[II]):
+        I[i] = map(lambda x: max(min(x*a+b,255),0), II[i]) # MAP FUNCTION!!!!!!!
+    return I
+
         
     
     
@@ -102,7 +99,7 @@ def grayLevelMap(I,b,a):
 
 # Loading an image using openCV
 I1=cv2.imread("GreenTest.jpg")
-#I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
+I2 = cv2.cvtColor(I1, cv2.COLOR_RGB2GRAY)#Changing color to gray scale
 
 #show2_OpenCV(I1, I2)
 #show1_OpenCV(image = I1)
@@ -112,13 +109,13 @@ I1=cv2.imread("GreenTest.jpg")
 #showAll_PyLab(image = I1, image2 = I2, image3 = I2)
 #cv2.imwrite("image.tif", I1)
 
-#vector = [255-x for x in range(0,256)]
-
-#I3 = grayLevelMap2(I2, vector)
+vector = [255-x for x in range(0,256)]
+#I2 = grayLevelMap2(I2, vector)
+I2 = greyLevelMapLambdaWay(I2, 2, 1)
 #I3 = grayLevelMap(I2,90,0)
 
-#show1_OpenCV(I1)
-R,G,B = I1[:,:,0], I1[:,:,1], I1[:,:,2]
+show1_OpenCV(I2)
+#R,G,B = I1[:,:,0], I1[:,:,1], I1[:,:,2]
 
 #displayFunc(vector)
 
