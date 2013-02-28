@@ -11,7 +11,7 @@ import sys
 
 
 
-inputFile = "Sequences/eye1.avi"
+inputFile = "/Developer/GitRepos/ITU-Image-Analysis-2013-EXERCISES/MandatoryAssignment1/Sequences/eye1.avi"
 outputFile = "eyeTrackerResult.mp4"
 
 #--------------------------
@@ -36,16 +36,21 @@ def GetPupil(gray,thr):
     val,binI = cv2.threshold(gray, thr, 255, cv2.THRESH_BINARY_INV)
     cv2.imshow("Threshold",binI)
     #Calculate blobs
-    sliderVals = getSliderVals()
-    contours, hierarchy = cv2.findContours(binI, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    sliderVals = getSliderVals() #Getting slider values
+    contours, hierarchy = cv2.findContours(binI, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #Finding contours/candidates for pupil blob
     pupils = []
+    pupilEllipses = []
     for cnt in contours:
-        values = props.CalcContourProperties(cnt.astype('int'),['Area','Length','Centroid','Extend','ConvexHull']) #BUG cnt.astype('int')
-        if values['Area'] < sliderVals['maxSize'] and values['Area'] > sliderVals['minSize']:
+        values = props.CalcContourProperties(cnt,['Area','Length','Centroid','Extend','ConvexHull']) #BUG - Add cnt.astype('int') in Windows
+        if values['Area'] < sliderVals['maxSize'] and values['Area'] > sliderVals['minSize'] and values['Extend'] < 1.2:
             pupils.append(values)
             centroid = (int(values['Centroid'][0]),int(values['Centroid'][1]))
             cv2.circle(tempResultImg,centroid, 2, (0,0,255),4)
+            pupilEllipses.append(cv2.fitEllipse(cnt))
     cv2.imshow("TempResults",tempResultImg)
+    return pupilEllipses 
+    
+    
     
             
             
@@ -133,27 +138,27 @@ def update(I):
     GetEyeCorners(leftTemplate, rightTemplate)
     #Display results
     global frameNr,drawImg
-    x,y = 10,10
-    #setText(img,(x,y),"Frame:%d" %frameNr)
+    x,y = 15,10
+    setText(img,(520,y+10),"Frame:%d" %frameNr)
     sliderVals = getSliderVals()
 
     # for non-windows machines we print the values of the threshold in the original image
     if sys.platform != 'win32':
         step=18
-        cv2.putText(img, "pupilThr :"+str(sliderVals['pupilThr']), (x, y+step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
-        cv2.putText(img, "glintThr :"+str(sliderVals['glintThr']), (x, y+2*step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
-    cv2.imshow('Result',img)
+        cv2.putText(img, "pupilThr :"+str(sliderVals['pupilThr']), (x, y), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
+        cv2.putText(img, "glintThr :"+str(sliderVals['glintThr']), (x, y+step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
+        cv2.putText(img, "maxSize :"+str(sliderVals['maxSize']), (x, y+2*step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
+        cv2.putText(img, "minSize :"+str(sliderVals['minSize']), (x, y+3*step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
+        cv2.putText(img, "minSize :"+str(sliderVals['minSize']), (x, y+4*step), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), lineType=cv2.CV_AA)
 
-        #Uncomment these lines as your methods start to work to display the result in the
-        #original image
-        # for pupil in pupils:
-        #         cv2.ellipse(img,pupil,(0,255,0),1)
-        #         C = int(pupil[0][0]),int(pupil[0][1])
-        #         cv2.circle(img,C, 2, (0,0,255),4)
-        #     for glint in glints:
-        #         C = int(glint[0]),int(glint[1])
-        #         cv2.circle(img,C, 2,(255,0,255),5)
-        #     cv2.imshow("Result", img)
+    for pupil in pupils:
+        cv2.ellipse(img,pupil,(0,255,0),1)
+        C = int(pupil[0][0]),int(pupil[0][1])
+        cv2.circle(img,C, 2, (0,0,255),4)
+    #for glint in glints:
+        #C = int(glint[0]),int(glint[1])
+        #cv2.circle(img,C, 2,(255,0,255),5)
+    cv2.imshow("Result", img)
 
         #For Iris detection - Week 2
         #circularHough(gray)
